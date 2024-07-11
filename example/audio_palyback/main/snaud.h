@@ -1,5 +1,5 @@
-#ifndef _MID_AUD02_H_
-#define _MID_AUD02_H_
+#ifndef _SNAUD_H_
+#define _SNAUD_H_
 
 #ifdef __cplusplus
 extern "C" {

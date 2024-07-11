@@ -9,3 +9,15 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+
+build
+*.devcontainer*
+*.vscode*
+*-info*
+*.dump*
+*managed_components*
+components/modules/config.h
+dependencies.lock
+sdkconfig.old
+sdkconfig

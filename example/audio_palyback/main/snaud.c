@@ -1,4 +1,4 @@
-#include "mid_AUD02.h"
+#include "snaud.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/i2s.h"
@@ -23,8 +23,8 @@
 
 
 /**********************I2C function*********************************/
-#define SDA_PIN GPIO_NUM_18
-#define SCL_PIN GPIO_NUM_23
+#define SDA_PIN GPIO_NUM_4
+#define SCL_PIN GPIO_NUM_5
 
 #define WRITE_BIT I2C_MASTER_WRITE              /*!< I2C master write */
 #define READ_BIT I2C_MASTER_READ 
@@ -57,7 +57,7 @@ void I2C_Mater_Init(void)
     i2c_master_write_byte(cmd, AUD02_ID << 1 | WRITE_BIT, 0x01);// 向AUD02写入操作，等待从机返回数据
     i2c_master_write(cmd,wr_data,size,0x01); // 写入数据
     i2c_master_stop(cmd);//i2c停止运行。并不是真正的停止，因为此时i2c还没有真正的运行，我认为这是一个标识，当时i2c运行的时候读取到此标志就停止运行。
-    ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_RATE_MS); //按照cmd中的记录的操作顺序开始运行i2c （start-> write AUD02 地址 -> 写入寄存器地址  -> 写入数据 -> stop）
+    ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_PERIOD_MS); //按照cmd中的记录的操作顺序开始运行i2c （start-> write AUD02 地址 -> 写入寄存器地址  -> 写入数据 -> stop）
     i2c_cmd_link_delete(cmd); // 操作完成 删除cmd
     return ret;
 }
@@ -74,12 +74,12 @@ esp_err_t I2C_Master_Read(i2c_port_t i2c_num,uint8_t reg_addr,uint8_t *rd_Data,s
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, AUD02_ID << 1 | WRITE_BIT, 0x01);// 向AUD02写入操作，等待从机返回数据
     i2c_master_write_byte(cmd,reg_addr, 0x01);
-    //ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_RATE_MS);
+    //ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_PERIOD_MS);
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, AUD02_ID << 1 | READ_BIT, 0x01);// 向AUD02写入操作，等待从机返回数据
     i2c_master_read_byte(cmd, rd_Data,0x01);
     i2c_master_stop(cmd);
-    ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_RATE_MS);
+    ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_PERIOD_MS);
 	//printf("data = 0x%x",*rd_Data);
     i2c_cmd_link_delete(cmd);
     return ESP_OK;
