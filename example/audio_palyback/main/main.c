@@ -12,7 +12,6 @@
 #include "driver/i2s_std.h"
 #include "esp_system.h"
 #include "esp_check.h"
-#include "example_config.h"
 #include "esp_log.h"
 #include "audio_player.h"
 #include "driver/gpio.h"
